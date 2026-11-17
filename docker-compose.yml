@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: attendance
+      MYSQL_USER: attendance_app
+      MYSQL_PASSWORD: ${DB_PASSWORD:-attendance-local-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-local-root-password}
+    volumes:
+      - attendance-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      DB_URL: jdbc:mysql://db:3306/attendance?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: attendance_app
+      DB_PASSWORD: ${DB_PASSWORD:-attendance-local-password}
+      APP_ADMIN_USERNAME: ${APP_ADMIN_USERNAME:-admin}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-Admin123!}
+    ports:
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  attendance-data:

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attendance reports | Classroom</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments :: navigation('Reports')}"></div>
+  <main class="page-content">
+    <section class="page-heading">
+      <div><p class="eyebrow">ATTENDANCE ANALYTICS</p><h1>Monthly reports</h1><p class="muted">See daily totals and attendance percentages for each student.</p></div>
+      <form th:action="@{/reports}" method="get" class="month-filter"><label for="month">Reporting month</label><input id="month" type="month" name="month" th:value="${report.month}"><button class="button button-secondary" type="submit">View report</button></form>
+    </section>
+    <div class="notice notice-error" th:if="${reportNotice}" th:text="${reportNotice}" role="status"></div>
+    <section class="summary-grid report-summary">
+      <article class="summary-card summary-green"><span class="summary-label">PRESENT</span><strong th:text="${report.presentCount}">0</strong><span class="summary-note">marked present</span></article>
+      <article class="summary-card summary-red"><span class="summary-label">ABSENT</span><strong th:text="${report.absentCount}">0</strong><span class="summary-note">marked absent</span></article>
+      <article class="summary-card summary-gold"><span class="summary-label">LATE</span><strong th:text="${report.lateCount}">0</strong><span class="summary-note">arrived late</span></article>
+      <article class="summary-card"><span class="summary-label">MONTH</span><strong class="month-label" th:text="${#temporals.format(report.month, 'MMMM')}">November</strong><span class="summary-note" th:text="${report.month.year}">2026</span></article>
+    </section>
+    <section class="panel">
+      <div class="panel-title"><div><p class="eyebrow">STUDENT SUMMARY</p><h2>Attendance by student</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>CLASS</th><th>PRESENT</th><th>ABSENT</th><th>LATE</th><th>ATTENDANCE</th><th></th></tr></thead>
+          <tbody>
+            <tr th:each="student : ${report.students}">
+              <td class="student-name" th:text="${student.studentName}">Student Name</td>
+              <td th:text="${student.studentNumber}">STU-1001</td>
+              <td th:text="${student.className}">Grade 8A</td>
+              <td th:text="${student.presentCount}">0</td>
+              <td th:text="${student.absentCount}">0</td>
+              <td th:text="${student.lateCount}">0</td>
+              <td><span class="percentage" th:text="|${#numbers.formatDecimal(student.attendancePercentage, 1, 1)}%|">0.0%</span></td>
+              <td><a class="text-link" th:href="@{/students/{id}/history(id=${student.studentId})}">History</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(report.students)}"><td colspan="8" class="empty-cell">Add students to see monthly attendance reports.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="report-note">Attendance percentage = (present + late) ÷ marked days. Unmarked days are not included.</p>
+    </section>
+  </main>
+</div>
+</body>
+</html>

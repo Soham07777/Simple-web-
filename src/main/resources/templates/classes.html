@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classes | Classroom</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments :: navigation('Classes')}"></div>
+  <main class="page-content">
+    <section class="page-heading"><div><p class="eyebrow">SCHOOL DIRECTORY</p><h1>Classes</h1><p class="muted">Organize your students into classes for daily attendance.</p></div><span class="count-pill" th:text="|${#lists.size(classes)} classes|">0 classes</span></section>
+    <div class="notice notice-success" th:if="${success}" th:text="${success}" role="status"></div>
+    <div class="notice notice-error" th:if="${error}" th:text="${error}" role="alert"></div>
+    <section class="panel">
+      <div class="panel-title"><div><p class="eyebrow">CLASS DIRECTORY</p><h2>Add a class</h2></div></div>
+      <form class="add-form class-form" th:action="@{/classes}" method="post">
+        <label>Class name<input name="name" maxlength="60" placeholder="e.g. Grade 9A" required></label>
+        <button class="button button-primary" type="submit">+ Add class</button>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>CLASS</th><th>STUDENTS</th></tr></thead>
+          <tbody>
+            <tr th:each="entry : ${classes}">
+              <td th:text="${entry.schoolClass.name}">Grade 8A</td>
+              <td><span class="count-pill" th:text="${entry.studentCount}">0</span></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(classes)}"><td colspan="2" class="empty-cell">No classes yet. Add a class to enroll students.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

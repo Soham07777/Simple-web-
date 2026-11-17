@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Classroom</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments :: navigation('Dashboard')}"></div>
+  <main class="page-content">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">YOUR SCHOOL, AT A GLANCE</p>
+        <h1>Good morning, teacher <span class="sparkle">✦</span></h1>
+        <p class="muted">Manage classes, keep the register, and follow attendance trends.</p>
+      </div>
+      <a class="button button-primary" th:href="@{/attendance(date=${today})}">Take attendance <span aria-hidden="true">→</span></a>
+    </section>
+
+    <section class="summary-grid" aria-label="School summary">
+      <article class="summary-card"><span class="summary-label">TOTAL STUDENTS</span><strong th:text="${studentCount}">0</strong><span class="summary-note">in your school</span></article>
+      <article class="summary-card summary-green"><span class="summary-label">PRESENT TODAY</span><strong th:text="${presentCount}">0</strong><span class="summary-note">ready to learn</span></article>
+      <article class="summary-card summary-red"><span class="summary-label">ABSENT TODAY</span><strong th:text="${absentCount}">0</strong><span class="summary-note">not in class</span></article>
+      <article class="summary-card summary-gold"><span class="summary-label">LATE TODAY</span><strong th:text="${lateCount}">0</strong><span class="summary-note">arrived late</span></article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="panel welcome-panel">
+        <p class="eyebrow">DAILY REGISTER</p>
+        <h2>Attendance for <span th:text="${#temporals.format(today, 'EEEE, MMMM d')}">today</span></h2>
+        <p class="muted">Attendance has been recorded for <strong th:text="${markedCount}">0</strong> students today.</p>
+        <a class="text-link" th:href="@{/attendance(date=${today})}">Open today's register <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="panel school-panel">
+        <p class="eyebrow">SCHOOL DIRECTORY</p>
+        <a class="directory-row" th:href="@{/students}"><span class="directory-icon">S</span><span><strong>Students</strong><small>Manage your student roster</small></span><b th:text="${studentCount}">0</b></a>
+        <a class="directory-row" th:href="@{/teachers}"><span class="directory-icon directory-teal">T</span><span><strong>Teachers</strong><small>View and update staff</small></span><b th:text="${teacherCount}">0</b></a>
+        <a class="directory-row" th:href="@{/classes}"><span class="directory-icon directory-gold">C</span><span><strong>Classes</strong><small>Organize your school</small></span><b th:text="${classCount}">0</b></a>
+      </article>
+    </section>
+    <footer>Student Attendance Management System <span>·</span> Secure administrator workspace</footer>
+  </main>
+</div>
+</body>
+</html>

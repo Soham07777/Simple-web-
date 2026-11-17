@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attendance | Classroom</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments :: navigation('Attendance')}"></div>
+  <main class="page-content">
+    <section class="page-heading">
+      <div><p class="eyebrow">DAILY REGISTER</p><h1>Class attendance</h1><p class="muted">Record or update each student's status for the selected date.</p></div>
+      <a class="button button-secondary" th:href="@{/reports}">View monthly reports <span aria-hidden="true">→</span></a>
+    </section>
+    <div class="notice notice-success" th:if="${success}" th:text="${success}" role="status"></div>
+    <div class="notice notice-error" th:if="${error}" th:text="${error}" role="alert"></div>
+    <section class="panel">
+      <form class="filter-bar" th:action="@{/attendance}" method="get">
+        <label>Date<input type="date" name="date" th:value="${date}" required></label>
+        <label>Class
+          <select name="classId">
+            <option value="">All classes</option>
+            <option th:each="schoolClass : ${classes}" th:value="${schoolClass.id}" th:text="${schoolClass.name}" th:selected="${classId == schoolClass.id}">Grade 8A</option>
+          </select>
+        </label>
+        <button class="button button-secondary" type="submit">Show register</button>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>CLASS</th><th>STATUS</th><th>ACTION</th></tr></thead>
+          <tbody>
+            <tr th:each="row : ${students}">
+              <td><span class="student-name" th:text="${row.student.name}">Student Name</span></td>
+              <td th:text="${row.student.studentNumber}">STU-1001</td>
+              <td th:text="${row.student.schoolClass.name}">Grade 8A</td>
+              <td><span class="status-badge" th:classappend="${row.status == null ? ' badge-unmarked' : ' badge-' + #strings.toLowerCase(row.status.name())}" th:text="${row.status == null ? 'Not marked' : row.status}">Not marked</span></td>
+              <td>
+                <form th:action="@{/attendance}" method="post" class="inline-form">
+                  <input type="hidden" name="studentId" th:value="${row.student.id}">
+                  <input type="hidden" name="classId" th:value="${row.student.schoolClass.id}">
+                  <input type="hidden" name="date" th:value="${date}">
+                  <select name="status" th:attr="aria-label=|Attendance status for ${row.student.name}|">
+                    <option value="" th:selected="${row.status == null}">Not marked</option>
+                    <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}" th:selected="${row.status == status}">PRESENT</option>
+                  </select>
+                  <button class="button button-small button-primary" type="submit">Save</button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(students)}"><td colspan="5" class="empty-cell">No students in this class yet. Add a student to start taking attendance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <footer>Choose “Not marked” and save to clear a previous attendance entry.</footer>
+  </main>
+</div>
+</body>
+</html>

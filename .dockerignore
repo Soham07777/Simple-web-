@@ -1,0 +1,8 @@
+.git
+.idea
+.vscode
+target
+attendance.db
+__pycache__
+*.py[cod]
+*.log

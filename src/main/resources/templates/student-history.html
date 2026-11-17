@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student history | Classroom</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments :: navigation('Students')}"></div>
+  <main class="page-content">
+    <section class="page-heading"><div><p class="eyebrow">STUDENT ATTENDANCE</p><h1 th:text="${student.name}">Student Name</h1><p class="muted"><span th:text="${student.studentNumber}">STU-1001</span> <span>·</span> <span th:text="${student.schoolClass.name}">Grade 8A</span></p></div><a class="button button-secondary" th:href="@{/students}">← Back to students</a></section>
+    <section class="panel">
+      <div class="panel-title"><div><p class="eyebrow">ATTENDANCE HISTORY</p><h2>Daily records</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>DATE</th><th>CLASS</th><th>STATUS</th></tr></thead>
+          <tbody>
+            <tr th:each="record : ${records}">
+              <td th:text="${#temporals.format(record.attendanceDate, 'MMM d, yyyy')}">Nov 17, 2026</td>
+              <td th:text="${student.schoolClass.name}">Grade 8A</td>
+              <td><span class="status-badge" th:classappend="${' badge-' + #strings.toLowerCase(record.status.name())}" th:text="${record.status}">PRESENT</span></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(records)}"><td colspan="3" class="empty-cell">No attendance records have been marked for this student.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

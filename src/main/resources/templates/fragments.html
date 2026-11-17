@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="topbar" th:fragment="navigation(active)">
+  <a class="brand" th:href="@{/}"><span class="brand-mark">C</span> Classroom</a>
+  <nav class="navigation" aria-label="Main navigation">
+    <a th:href="@{/}" th:classappend="${active == 'Dashboard' ? ' active' : ''}">Overview</a>
+    <a th:href="@{/attendance}" th:classappend="${active == 'Attendance' ? ' active' : ''}">Attendance</a>
+    <a th:href="@{/students}" th:classappend="${active == 'Students' ? ' active' : ''}">Students</a>
+    <a th:href="@{/teachers}" th:classappend="${active == 'Teachers' ? ' active' : ''}">Teachers</a>
+    <a th:href="@{/classes}" th:classappend="${active == 'Classes' ? ' active' : ''}">Classes</a>
+    <a th:href="@{/reports}" th:classappend="${active == 'Reports' ? ' active' : ''}">Reports</a>
+  </nav>
+  <form class="logout-form" th:action="@{/logout}" method="post">
+    <span class="signed-in">Administrator</span>
+    <button class="quiet-button" type="submit">Sign out</button>
+  </form>
+</header>
+</body>
+</html>
